@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Url-Shortener-2/configs"
 	"Url-Shortener-2/internal/auth"
 	"Url-Shortener-2/internal/hello"
 	"fmt"
@@ -8,10 +9,12 @@ import (
 )
 
 func main() {
-	//conf := configs.LoadConfig()
+	conf := configs.LoadConfig()
 	router := http.NewServeMux()
 	hello.NewHelloHandler(router)
-	auth.NewAuthHandler(router)
+	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
+		Config: conf,
+	})
 	// /auth/login
 	// /auth/register
 
