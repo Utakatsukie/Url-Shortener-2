@@ -1,13 +1,14 @@
 package main
 
 import (
+	"Url-Shortener-2/internal/hello"
 	"fmt"
 	"net/http"
 )
 
 func main() {
 	router := http.NewServeMux()
-	NewHelloHandler(router)
+	hello.NewHelloHandler(router)
 	server := http.Server{
 		Addr:    ":8081",
 		Handler: router,
