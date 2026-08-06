@@ -3,6 +3,7 @@ package auth
 import (
 	"Url-Shortener-2/configs"
 	"Url-Shortener-2/pkg/res"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -26,7 +27,13 @@ func NewAuthHandler(router *http.ServeMux, deps AuthHandlerDeps) {
 func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		fmt.Println(handler.Config.Auth.Secret)
-		fmt.Println("Login")
+		// read body
+		var payload LoginRequest
+		err := json.NewDecoder(req.Body).Decode(&payload)
+		if err != nil {
+			res.Json(w, err.Error(), 402)
+		}
+		fmt.Println(payload)
 		data := LoginResponse{
 			Token: "123",
 		}
