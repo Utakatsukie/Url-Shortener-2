@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 )
 
 type AuthHandler struct {
@@ -36,6 +37,12 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		}
 		if payload.Email == "" {
 			res.Json(w, "Email required", 402)
+			return
+		}
+		reg, _ := regexp.Compile(`[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}`)
+		//ещё есть варианты проверки почты, видос пересмотри
+		if !reg.MatchString(payload.Email) {
+			res.Json(w, "Wrong email", 402)
 			return
 		}
 		if payload.Password == "" {
