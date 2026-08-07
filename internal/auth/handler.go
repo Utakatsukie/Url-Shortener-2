@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"regexp"
+	"net/mail"
 )
 
 type AuthHandler struct {
@@ -30,8 +30,7 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		fmt.Println(handler.Config.Auth.Secret)
 		// read body
 		var payload LoginRequest
-		err := json.NewDecoder(req.Body).Decode(&payload)
-		if err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&payload); err != nil {
 			res.Json(w, err.Error(), 402)
 			return
 		}
@@ -39,9 +38,10 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 			res.Json(w, "Email required", 402)
 			return
 		}
-		reg, _ := regexp.Compile(`[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}`)
+		//reg, _ := regexp.Compile(`[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}`)
 		//ещё есть варианты проверки почты, видос пересмотри
-		if !reg.MatchString(payload.Email) {
+
+		if _, err := mail.ParseAddress(payload.Email); err != nil {
 			res.Json(w, "Wrong email", 402)
 			return
 		}
