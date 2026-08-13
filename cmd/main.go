@@ -4,12 +4,14 @@ import (
 	"Url-Shortener-2/configs"
 	"Url-Shortener-2/internal/auth"
 	"Url-Shortener-2/internal/hello"
+	"Url-Shortener-2/pkg/db"
 	"fmt"
 	"net/http"
 )
 
 func main() {
 	conf := configs.LoadConfig()
+	_ = db.NewDb(conf)
 	router := http.NewServeMux()
 	hello.NewHelloHandler(router)
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
