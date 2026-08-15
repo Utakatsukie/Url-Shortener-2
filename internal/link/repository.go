@@ -1,0 +1,17 @@
+package link
+
+import "Url-Shortener-2/pkg/db"
+
+type LinkRepository struct {
+	Database *db.Db
+}
+
+func NewLinkRepository(database *db.Db) *LinkRepository {
+	return &LinkRepository{
+		Database: database,
+	}
+}
+
+func (repo *LinkRepository) Create(link *Link) {
+
+}
