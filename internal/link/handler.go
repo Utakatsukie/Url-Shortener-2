@@ -1,6 +1,8 @@
 package link
 
 import (
+	"Url-Shortener-2/pkg/req"
+	"Url-Shortener-2/pkg/res"
 	"fmt"
 	"net/http"
 )
@@ -25,7 +27,17 @@ func NewLinkHandler(router *http.ServeMux, deps LinkHandlerDeps) {
 
 func (handler *LinkHandler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		//handler.LinkRepository.Create()
+		body, err := req.HandleBody[LinkCreateRequest](&w, r)
+		if err != nil {
+			return
+		}
+		link := NewLink(body.Url)
+		createdLink, err := handler.LinkRepository.Create(link)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		res.Json(w, createdLink, 201)
 	}
 }
 

@@ -11,11 +11,11 @@ import (
 
 func main() {
 	conf := configs.LoadConfig()
-	db := db.NewDb(conf)
+	database := db.NewDb(conf)
 	router := http.NewServeMux()
 
 	// Repositories
-	linkRepository := link.NewLinkRepository(db)
+	linkRepository := link.NewLinkRepository(database)
 
 	// Handler
 	//hello.NewHelloHandler(router)
