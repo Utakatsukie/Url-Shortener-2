@@ -85,6 +85,7 @@ func (handler *LinkHandler) Delete() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		//тут херня с обработкой ошибки, переделай потом
 		_, err = handler.LinkRepository.GetByID(uint(id))
 		if err != nil {
 			res.Json(w, err.Error(), http.StatusNotFound)
