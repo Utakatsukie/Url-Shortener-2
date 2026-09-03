@@ -2,8 +2,8 @@ package link
 
 import (
 	"Url-Shortener-2/configs"
-	"Url-Shortener-2/internal/stat"
 	"Url-Shortener-2/middleware"
+	"Url-Shortener-2/pkg/di"
 	"Url-Shortener-2/pkg/req"
 	"Url-Shortener-2/pkg/res"
 	"fmt"
@@ -15,13 +15,13 @@ import (
 
 type LinkHandlerDeps struct {
 	LinkRepository *LinkRepository
-	StatRepository *stat.StatRepository
+	StatRepository di.IStatRepository
 	Config         *configs.Config
 }
 
 type LinkHandler struct {
 	LinkRepository *LinkRepository
-	StatRepository *stat.StatRepository
+	StatRepository di.IStatRepository
 }
 
 func NewLinkHandler(router *http.ServeMux, deps LinkHandlerDeps) {
