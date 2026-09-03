@@ -2,6 +2,7 @@ package main
 
 import (
 	"Url-Shortener-2/internal/link"
+	"Url-Shortener-2/internal/stat"
 	"Url-Shortener-2/internal/user"
 	"os"
 
@@ -19,5 +20,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&link.Link{}, &user.User{})
+	db.AutoMigrate(&link.Link{}, &user.User{}, &stat.Stat{})
 }
