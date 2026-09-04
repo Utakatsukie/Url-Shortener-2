@@ -526,8 +526,6 @@ DSN=postgres://postgres:my_password@localhost:5432/postgres?sslmode=disable
 TOKEN=your-secret-key
 ```
 
-> Do not commit real secrets to the repository.
-
 ---
 
 # Running Locally
