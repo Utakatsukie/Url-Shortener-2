@@ -1,7 +1,8 @@
 package configs
 
 import (
-	"log"
+	"errors"
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -20,12 +21,12 @@ type AuthConfig struct {
 	Secret string
 }
 
-func LoadConfig() *Config {
+func LoadConfig() (*Config, error) {
 	err := godotenv.Load()
-	if err != nil {
-		log.Println("Error loading .env file, using default config")
+	if err != nil && !os.IsNotExist(err) {
+		return nil, fmt.Errorf("Failed to load .env file: %w", err)
 	}
-	return &Config{
+	cfg := &Config{
 		Db: DbConfig{
 			Dsn: os.Getenv("DSN"),
 		},
@@ -33,4 +34,13 @@ func LoadConfig() *Config {
 			Secret: os.Getenv("TOKEN"),
 		},
 	}
+
+	if cfg.Db.Dsn == "" {
+		return nil, errors.New("REQUIRED_ENV_MISSING: DSN is empty")
+	}
+	if cfg.Auth.Secret == "" {
+		return nil, errors.New("REQUIRED_ENV_MISSING: TOKEN is empty")
+	}
+
+	return cfg, nil
 }

@@ -9,11 +9,15 @@ import (
 	"Url-Shortener-2/middleware"
 	"Url-Shortener-2/pkg/db"
 	"fmt"
+	"log"
 	"net/http"
 )
 
 func main() {
-	conf := configs.LoadConfig()
+	conf, err := configs.LoadConfig()
+	if err != nil {
+		log.Fatal("Config initialisation failed: %v", err)
+	}
 	database := db.NewDb(conf)
 	router := http.NewServeMux()
 
