@@ -3,14 +3,14 @@ package stat
 import (
 	"Url-Shortener-2/configs"
 	"Url-Shortener-2/middleware"
-	"fmt"
+	"Url-Shortener-2/pkg/res"
 	"net/http"
 	"time"
 )
 
 const (
-	FilterByDay   = "day"
-	FilterByMonth = "month"
+	GroupByDay   = "day"
+	GroupByMonth = "month"
 )
 
 type StatHandlerDeps struct {
@@ -29,7 +29,7 @@ func NewStatHandler(router *http.ServeMux, deps StatHandlerDeps) {
 	router.Handle("GET /stat", middleware.IsAuthed(handler.GetStat(), deps.Config))
 }
 
-func (s *StatHandler) GetStat() http.HandlerFunc {
+func (h *StatHandler) GetStat() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		from, err := time.Parse("2006-01-02", r.URL.Query().Get("from"))
 		if err != nil {
@@ -42,10 +42,11 @@ func (s *StatHandler) GetStat() http.HandlerFunc {
 			return
 		}
 		by := r.URL.Query().Get("by")
-		if by != FilterByDay && by != FilterByMonth {
+		if by != GroupByDay && by != GroupByMonth {
 			http.Error(w, "Invalid by param", http.StatusBadRequest)
 			return
 		}
-		fmt.Println(from, to, by)
+		stats := h.StatRepository.GetStats(by, from, to)
+		res.Json(w, stats, 200)
 	}
 }
