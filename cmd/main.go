@@ -17,7 +17,7 @@ import (
 func App() http.Handler {
 	conf, err := configs.LoadConfig()
 	if err != nil {
-		log.Fatal("Config initialisation failed: %v", err)
+		log.Fatalf("Config initialisation failed: %v", err)
 	}
 	database := db.NewDb(conf)
 	router := http.NewServeMux()
