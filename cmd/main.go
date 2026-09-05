@@ -4,6 +4,7 @@ import (
 	"Url-Shortener-2/configs"
 	"Url-Shortener-2/internal/auth"
 	"Url-Shortener-2/internal/link"
+	"Url-Shortener-2/internal/stat"
 	"Url-Shortener-2/internal/user"
 	"Url-Shortener-2/middleware"
 	"Url-Shortener-2/pkg/db"
@@ -25,10 +26,14 @@ func main() {
 	// Repositories
 	linkRepository := link.NewLinkRepository(database)
 	userRepository := user.NewUserRepository(database)
-	//statRepository := stat.NewStatRepository(database)
+	statRepository := stat.NewStatRepository(database)
 
 	// Services
 	authService := auth.NewAuthService(userRepository)
+	statService := stat.NewStatService(&stat.StatServiceDeps{
+		EventBus:       eventBus,
+		StatRepository: statRepository,
+	})
 
 	// Handler
 	//hello.NewHelloHandler(router)
@@ -52,6 +57,8 @@ func main() {
 		Addr:    ":8081",
 		Handler: stack(router),
 	}
+
+	go statService.AddClick()
 
 	fmt.Println("Server is listening on port 8081")
 	server.ListenAndServe()
