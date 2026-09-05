@@ -405,7 +405,15 @@ Url-Shortener-2/
 │   │   └── repository.go
 │   │
 │   ├── stat/
+│   │   ├── handler.go
+│   │   ├── model.go
+│   │   ├── payload.go
+│   │   ├── repository.go
+│   │   └── service.go
+│   │   
 │   └── user/
+│       ├── model.go
+│       └── repository.go
 │
 ├── middleware/
 │   ├── auth.go
@@ -418,15 +426,20 @@ Url-Shortener-2/
 │   └── auto.go
 │
 ├── pkg/
-│   ├── db/
-│   ├── di/
-│   ├── jwt/
+│   ├── db/db.go
+│   ├── di/interfaces.go
+│   ├── event/eventbus.go
+│   ├── jwt/jwt.go
 │   ├── req/
-│   └── res/
+│   │   ├── decode.go
+│   │   ├── handle.go
+│   │   └── validate.go
+│   └── res/res.go
 │
 ├── docker-compose.yml
 ├── go.mod
-└── go.sum
+├── go.sum
+└── README.md
 ```
 
 The project separates application-specific functionality under `internal`, reusable infrastructure under `pkg`, request processing under `middleware`, and database migration logic under `migrations`.
