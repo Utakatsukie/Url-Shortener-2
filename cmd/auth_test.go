@@ -2,6 +2,7 @@ package main
 
 import (
 	"Url-Shortener-2/internal/auth"
+	"Url-Shortener-2/internal/user"
 	"bytes"
 	"encoding/json"
 	"io"
@@ -16,7 +17,7 @@ import (
 )
 
 func initDb() *gorm.DB {
-	err := godotenv.Load("cmd/.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		panic(err)
 	}
@@ -27,9 +28,18 @@ func initDb() *gorm.DB {
 	return db
 }
 
+func initData(db *gorm.DB) {
+	db.Create(&user.User{
+		Email:    "a4@0b.by",
+		Password: "$2a$10$2hOlfZQj0TzSnbZzD3z78e881L5yMt9KCuAIxp88Dm2OmHYWyTwa.",
+		Name:     "Ivan",
+	})
+}
+
 func TestLoginSuccess(t *testing.T) {
 	// Prepare
 	db := initDb()
+	initData(db)
 	ts := httptest.NewServer(App())
 	defer ts.Close()
 
@@ -62,6 +72,7 @@ func TestLoginSuccess(t *testing.T) {
 func TestLoginFail(t *testing.T) {
 	// Prepare
 	db := initDb()
+	initData(db)
 	ts := httptest.NewServer(App())
 	defer ts.Close()
 
